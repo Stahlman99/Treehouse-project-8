@@ -38,12 +38,12 @@ router.get('/books/:id', asyncHandler(async(req, res) => {
 }));
 
 /* POST update book page. */
-router.post('/books', asyncHandler(async(req, res) => {
+router.post('/books/:id', asyncHandler(async(req, res) => {
   // res.render('index', { title: 'Express' });
 }));
 
 /* POST delete book page. */
-router.post('/books', asyncHandler(async(req, res) => {
+router.post('/books/:id/delete', asyncHandler(async(req, res) => {
   // res.render('index', { title: 'Express' });
 }));
 
