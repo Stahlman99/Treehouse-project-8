@@ -14,7 +14,8 @@ function asyncHandler(cb) {
 
 /* GET book page. */
 router.get('/books', asyncHandler(async(req, res) => {
-    res.render('index', { title: 'Express' });
+  const books = await Book.findAll();
+  res.render('index', { books, title: 'Books' });
 }));
 
 /* GET new book page. */
@@ -29,7 +30,7 @@ router.post('/books', asyncHandler(async(req, res) => {
 
 /* GET book page. */
 router.get('/books', asyncHandler(async(req, res) => {
-  res.render('index', { title: 'Express' });
+  // res.render('index', { title: 'Library' });
 }));
 
 /* GET book detail page. */
