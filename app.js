@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 
 var indexRouter = require('./routes/index');
+var bookRouter = require('./routes/books');
 
 var app = express();
 
@@ -11,9 +12,10 @@ app.set('view engine', 'pug');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static('public'));
 
 app.use('/', indexRouter);
+app.use('/', bookRouter);
 
 // Import sequelize instance
 const db = require('./models');
@@ -30,19 +32,25 @@ const sequelize = db.sequelize;
 })();
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  //next(createError(404));
+app.use((req, res) => {
+  const err = new Error();
+  err.message = 'Uh oh! Page not not found.'
+  err.status = 404;
+
+  console.log(`${err} / Status ${err.status}`);
+  res.status(err.status).render('page-not-found', { err } );
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use((err, req, res, next) => {
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  console.log(`${err} / Status ${err.status}`);
+
+  err.message = err.message || 'Oops! There was an error on the server.';
+  if (err.status === undefined){
+      err.status = 500;
+  }
+  res.status(err.status).render('error', { err } );
 });
 
 module.exports = app;
