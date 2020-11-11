@@ -26,8 +26,8 @@ const sequelize = db.sequelize;
   try {
     await sequelize.authenticate();
     console.log('Connection to the database successful!');
-  } catch (error) {
-    console.error('Error connecting to the database: ', error);
+  } catch (err) {
+    console.error('Error connecting to the database: ', err);
   }
 })();
 
