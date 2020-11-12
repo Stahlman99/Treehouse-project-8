@@ -99,9 +99,19 @@ router.post('/books/new', asyncHandler(async(req, res) => {
 }));
 
 /* GET book detail page. */
-router.get('/books/:id', asyncHandler(async(req, res) => {
-  const book = await Book.findByPk(req.params.id);
-  res.render("update-book", { book, title: 'Update Book' });
+router.get('/books/:id', asyncHandler(async(req, res, next) => {
+  const books = await Book.findAll();
+  console.log(books[req.params.id])
+  if (!books[req.params.id]) {
+    console.log('Error');
+    const err = new Error();
+    err.status = 404;
+    err.message = 'Looks like the book you requested does not exist.';
+    next(err);
+  } else {
+      console.log('Render');
+      res.render("update-book", { book: books[req.params.id], title: 'Update Book' });
+  }  
 }));
 
 /* POST update book page. */

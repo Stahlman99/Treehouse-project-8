@@ -1,33 +1,41 @@
 extends layout
 
 block content
-  h1= title
-  div.searchmenu
-    a.button(href="/books/new") Create New Book
-    a.searchbtn(href=`/books`) All Books
-    form(action="/books", method="GET").searchform
-      button(type='submit').searchbtn Search
-      input#term(name='term' type='text')
-  br
-  br
-  table
-    thead
-      tr
-        th Title
-        th Author
-        th Genre
-        th Year
-    tbody
-      each book in books
-        book
-          tr
-            td
-              a(href=`/books/${book.id}`) #{book.title}
-            td #{book.author}
-            td #{book.genre}
-            td #{book.year}
-  br
-  div.pagebtnsdiv
-    - for(let i = 0; i < totalPages; i++) {
-        a.searchbtn(href=`/books?term=${term}&page=${i}`)= i+1
-    - }
+  style.
+      body {
+        background-image: url('/static/images/library-1.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+  div.all-books
+    h1= title
+    div.searchmenu
+      a.button(href="/books/new") Create New Book
+      a.button(href=`/books`) All Books
+      form(action="/books", method="GET").searchform
+        input#term(name='term' type='text')
+        button(type='submit').searchbtn Search
+    br
+    br
+    table
+      thead
+        tr
+          th.title Title
+          th.author Author
+          th.genre Genre
+          th.year Year
+      tbody
+        each book in books
+          book
+            tr
+              td
+                a(href=`/books/${book.id}`) #{book.title}
+              td #{book.author}
+              td #{book.genre}
+              td #{book.year}
+    br
+    div.pagebtnsdiv
+      - for(let i = 0; i < totalPages; i++) {
+          a.button(href=`/books?term=${term}&page=${i}`)= i+1
+      - }

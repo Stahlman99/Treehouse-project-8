@@ -33,25 +33,26 @@ const sequelize = db.sequelize;
 })();
 
 // catch 404 and forward to error handler
-app.use((req, res) => {
+app.use((req, res, next) => {
   const err = new Error();
-  err.message = '404 Page not found.'
+  err.message = 'Uh oh! It looks like that page does not exist.'
   err.status = 404;
 
   console.log(`${err} / Status ${err.status}`);
-  res.status(err.status).render('page-not-found' );
+  next(err);
 });
 
 // error handler
 app.use((err, req, res, next) => {
 
-  console.log(`${err} / Status ${err.status}`);
-
-  err.message = err.message || 'Oops! There was an error on the server.';
-  if (err.status === undefined){
-      err.status = 500;
+  if (err.status === 404) {
+    console.log(`${err} / Status: ${err.status}`);
+    res.status(err.status).render('page-not-found', { err });
+  } else {
+    err.message = err.message || 'Oops! There was an error on the server.';
+    console.log(`${err} / Status ${err.status}`);
+    res.status(err.status || 500).render('error', { err } );
   }
-  res.status(err.status).render('error', { err } );
 });
 
 module.exports = app;
