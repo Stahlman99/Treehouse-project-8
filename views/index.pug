@@ -4,7 +4,8 @@ block content
   h1= title
   div.searchmenu
     a.button(href="/books/new") Create New Book
-    form(action="/search", method="GET").searchform
+    a.searchbtn(href=`/books`) All Books
+    form(action="/books", method="GET").searchform
       button(type='submit').searchbtn Search
       input#term(name='term' type='text')
   br
@@ -25,3 +26,8 @@ block content
             td #{book.author}
             td #{book.genre}
             td #{book.year}
+  br
+  div.pagebtnsdiv
+    - for(let i = 0; i < totalPages; i++) {
+        a.searchbtn(href=`/books?term=${term}&page=${i}`)= i+1
+    - }

@@ -16,10 +16,64 @@ function asyncHandler(cb) {
   }
 }
 
+// Allows us to include pagination in our queries.
+const paginate = (query, { page, pageSize }) => {
+  const offset = page * pageSize;
+  const limit = pageSize;
+
+  return {
+    ...query,
+    offset,
+    limit,
+  };
+};
+
 /* GET book page. */
+// I learned a few things about searching with Sequelize from this video - https://www.youtube.com/watch?v=6jbrWF3BWM0&t=1143s
+// I learned a few things about pagination with Sequelize from this website - https://www.mcieslar.com/pagination-with-sequelize-explained
 router.get('/books', asyncHandler(async(req, res) => {
-  const books = await Book.findAll({ order: [[ "title", "ASC" ]] });
-  res.render("index", { books, title: 'Books' });
+  let books = null;
+  let totalPages;
+  let currentPage = (req.query.page === undefined) ? 0 : req.query.page;
+
+  const Op = Sequelize.Op;
+  let term;
+  (req.query.term === undefined) ? term = "" : term = req.query.term;
+
+  // Runs is there is a search term specified.
+  if (term !== undefined) {
+    books = await Book.findAndCountAll(
+      paginate(
+        {
+          where: {
+            [Op.or]: [
+              { title: { [Op.like]: '%' + term + '%' } },
+              { author: { [Op.like]: '%' + term + '%' } },
+              { genre: { [Op.like]: '%' + term + '%' } },
+              { year: { [Op.like]: '%' + term + '%' } }
+            ]
+          },
+          order: [[ "title", "ASC" ]]
+        },
+        { page: currentPage, pageSize: 10 },
+      )
+    );
+    
+  // Returns all books if there is no search term specified.
+  } else {
+    books = await Book.findAndCountAll(
+      paginate(
+        {
+          order: [[ "title", "ASC" ]] // order
+        },
+        { page: pageNum, pageSize: 10 },
+      )
+    );
+  }
+
+  totalPages = (books.count <= 10) ? 0 : Math.ceil(books.count / 10);
+
+  res.render("index", { term, totalPages, books: books.rows, title: 'Books' });
 }));
 
 /* GET new book page. */
@@ -81,23 +135,6 @@ router.post('/books/:id/delete', asyncHandler(async(req, res) => {
   } else {
     res.sendStatus(404);
   }
-}));
-
-/* GET search books page. */
-router.get('/search', asyncHandler(async(req, res) => {
-  const Op = Sequelize.Op;
-  const { term } = req.query;
-  const books = await Book.findAll({
-    where: {
-      [Op.or]: [
-        { title: { [Op.like]: '%' + term + '%' } },
-        { author: { [Op.like]: '%' + term + '%' } },
-        { genre: { [Op.like]: '%' + term + '%' } },
-        { year: { [Op.like]: '%' + term + '%' } }
-      ]
-    }
-  });
-  res.render("index", { books, title: 'Search Books' });
 }));
 
 module.exports = router;
