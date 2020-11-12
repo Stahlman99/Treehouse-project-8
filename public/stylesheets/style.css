@@ -162,3 +162,14 @@ table {
   margin-top: 15%;
   text-align: center;
 }
+
+.form-page {
+  width: 55%;
+  margin: auto;
+  margin-top: 15%;
+  text-align: center;
+}
+
+.form-offset {
+  margin-right: 130px;
+}

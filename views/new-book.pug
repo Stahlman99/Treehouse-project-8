@@ -1,17 +1,19 @@
 extends layout
 
 block content
-    h1 New Book
-    if(errors)
-        h2.error Oops an error occurred!
-        ul.error
-            each error in errors
-                li
-                    =error.message
+    div.form-page
+        h1 New Book
+        if(errors)
+            h2.error Oops an error occurred!
+            ul.error
+                each error in errors
+                    li
+                        =error.message
 
-    form(action="/books/new", method="post")
-        include form
-        p
-            input(type='submit' value='Create New Book')
-        p
-            a.button(href='/books') Cancel
+        form(action="/books/new", method="post")
+            include form
+            div.form-offset
+                p
+                    input(type='submit' value='Create New Book')
+                p
+                    a.button(href='/books') Cancel

@@ -4,7 +4,8 @@ The 8th project in Treehouse's Full Stack Techdegree.
 I got the background photo from here: https://unsplash.com/photos/sfL_QOnmy00
 
 Style changes:
-    .searchmenu {
+
+.searchmenu {
   display: inline-block;
 }
 
@@ -36,6 +37,7 @@ table {
   table-layout: fixed;
   display: inline-block;
   text-align: left;
+  margin-bottom: 5px;
 }
 
 .title {
@@ -67,4 +69,15 @@ table {
   margin: auto;
   margin-top: 15%;
   text-align: center;
+}
+
+.form-page {
+  width: 55%;
+  margin: auto;
+  margin-top: 15%;
+  text-align: center;
+}
+
+.form-offset {
+  margin-right: 130px;
 }
